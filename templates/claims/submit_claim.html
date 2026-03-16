@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>Submit Claim</h4>
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="mb-3">
+<label>Title</label>
+<input type="text" name="title" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Category</label>
+<select name="category" class="form-control">
+<option>Travel</option>
+<option>Medical</option>
+<option>Food</option>
+<option>Others</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Amount</label>
+<input type="number" name="amount" class="form-control">
+</div>
+
+<div class="mb-3">
+<label>Description</label>
+<textarea name="description" class="form-control"></textarea>
+</div>
+
+<div class="mb-3">
+<label>Receipt</label>
+<input type="file" name="receipt" class="form-control">
+</div>
+
+<button class="btn btn-primary">Submit Claim</button>
+
+</form>
+
+{% endblock %}

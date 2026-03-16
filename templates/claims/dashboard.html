@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row g-3 mb-4">
+
+<div class="col-md-3">
+<div class="card text-center bg-primary text-white">
+<div class="card-body">
+<h6>Total Claims</h6>
+<h3>{{ stats.total_claims }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center bg-warning text-dark">
+<div class="card-body">
+<h6>Pending</h6>
+<h3>{{ stats.pending }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center bg-success text-white">
+<div class="card-body">
+<h6>Approved</h6>
+<h3>{{ stats.approved }}</h3>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card text-center bg-danger text-white">
+<div class="card-body">
+<h6>Rejected</h6>
+<h3>{{ stats.rejected }}</h3>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+<div class="col-md-6">
+<div class="card bg-primary text-white">
+<div class="card-body">
+<h6>Total Claim Amount</h6>
+<h2>RM {{ stats.total_amount }}</h2>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="card bg-success text-white">
+<div class="card-body">
+<h6>Approved Amount</h6>
+<h2>RM {{ stats.approved_amount }}</h2>
+</div>
+</div>
+</div>
+
+</div>
+
+<h5>Recent Claims</h5>
+
+<table class="table table-sm">
+<thead>
+<tr>
+<th>Title</th>
+<th>Amount</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+{% for c in recent_claims %}
+<tr>
+<td>{{ c.title }}</td>
+<td>RM {{ c.claim_amount }}</td>
+<td>{{ c.status }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+{% endblock %}

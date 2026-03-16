@@ -46,6 +46,11 @@ os.makedirs(LEAVE_UPLOAD_FOLDER, exist_ok=True)
 
 ALLOWED_LEAVE_EXTENSIONS = {"png", "jpg", "jpeg", "pdf"}
 
+CLAIM_UPLOAD_FOLDER = os.path.join("static", "uploads", "claims")
+os.makedirs(CLAIM_UPLOAD_FOLDER, exist_ok=True)
+
+ALLOWED_CLAIM_EXTENSIONS = {"png","jpg","jpeg","pdf"}
+
 
 PROFILE_UPLOAD_FOLDER = os.path.join("static", "uploads", "profile_photos")
 app.config["PROFILE_UPLOAD_FOLDER"] = PROFILE_UPLOAD_FOLDER
@@ -61,6 +66,9 @@ def allowed_leave_file(filename):
         "." in filename
         and filename.rsplit(".", 1)[1].lower() in ALLOWED_LEAVE_EXTENSIONS
     )
+    
+def allowed_claim_file(filename):
+    return "." in filename and filename.rsplit(".",1)[1].lower() in ALLOWED_CLAIM_EXTENSIONS
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
 # ---------------------- Position Hierarchy ----------------------
@@ -310,6 +318,24 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id),
             FOREIGN KEY (uploaded_by) REFERENCES users(id)
         )
+    """))
+    #Claim
+    c.execute(
+        adapt_query("""CREATE TABLE IF NOT EXISTS claims (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        category TEXT,
+        description TEXT,
+        claim_amount DECIMAL(10,2),
+        receipt_file TEXT,
+        status TEXT DEFAULT 'Pending',
+        created_at TEXT,
+        approved_at TEXT,
+        approver_id INTEGER,
+        remarks TEXT,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+    )
     """))
 
 
@@ -1391,6 +1417,147 @@ def get_leave_data(mode):
     rows = c.fetchall()
     conn.close()
     return rows
+
+def get_claim_dashboard(user_id):
+    
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute(adapt_query("""
+        SELECT
+            COUNT(*) AS total_claims,
+            COUNT(*) FILTER (WHERE status='Pending') AS pending,
+            COUNT(*) FILTER (WHERE status='Approved') AS approved,
+            COUNT(*) FILTER (WHERE status='Rejected') AS rejected,
+            COALESCE(SUM(claim_amount),0) AS total_amount,
+            COALESCE(SUM(claim_amount) FILTER (WHERE status='Approved'),0) AS approved_amount
+        FROM claims
+        WHERE user_id=%s
+    """), (user_id,))
+
+    stats = c.fetchone()
+
+    c.execute(adapt_query("""
+        SELECT *
+        FROM claims
+        WHERE user_id=%s
+        ORDER BY created_at DESC
+        LIMIT 5
+    """), (user_id,))
+
+    recent = c.fetchall()
+
+    conn.close()
+
+    return stats, recent
+
+@app.route("/claims/dashboard")
+@login_required
+def claim_dashboard():
+
+    user_id = session["user_id"]
+
+    stats, recent = get_claim_dashboard(user_id)
+
+    return render_template(
+        "claims/dashboard.html",
+        stats=stats,
+        recent_claims=recent
+    )
+    
+@app.route("/claims/submit", methods=["GET","POST"])
+@login_required
+def submit_claim():
+
+    if request.method == "POST":
+
+        title = request.form.get("title")
+        category = request.form.get("category")
+        description = request.form.get("description")
+        amount = request.form.get("amount")
+
+        receipt = request.files.get("receipt")
+
+        filename = None
+
+        if receipt and allowed_claim_file(receipt.filename):
+            filename = secure_filename(receipt.filename)
+            receipt.save(os.path.join(CLAIM_UPLOAD_FOLDER,filename))
+
+        conn = get_db()
+        c = conn.cursor()
+
+        c.execute(adapt_query("""
+        INSERT INTO claims
+        (user_id,title,category,description,claim_amount,receipt_file,status,created_at)
+        VALUES (%s,%s,%s,%s,%s,%s,'Pending',%s)
+        """),(
+            session["user_id"],
+            title,
+            category,
+            description,
+            amount,
+            filename,
+            datetime.utcnow().isoformat()
+        ))
+
+        conn.commit()
+        conn.close()
+
+        flash("Claim submitted successfully","success")
+
+        return redirect(url_for("claim_dashboard"))
+
+    return render_template("claims/submit_claim.html")
+
+@app.route("/admin/claims")
+@admin_required
+def admin_claims():
+
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute(adapt_query("""
+        SELECT c.*, u.full_name
+        FROM claims c
+        JOIN users u ON u.id=c.user_id
+        ORDER BY c.created_at DESC
+    """))
+
+    claims = c.fetchall()
+
+    conn.close()
+
+    return render_template("admin/claims.html",claims=claims)
+
+@app.route("/admin/claims/<int:claim_id>/<action>")
+@admin_required
+def process_claim(claim_id,action):
+
+    status = "Approved" if action=="approve" else "Rejected"
+
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute(adapt_query("""
+    UPDATE claims
+    SET status=%s,
+        approved_at=%s,
+        approver_id=%s
+    WHERE id=%s
+    """),(
+        status,
+        datetime.utcnow().isoformat(),
+        session["user_id"],
+        claim_id
+    ))
+
+    conn.commit()
+    conn.close()
+
+    flash(f"Claim {status}","success")
+
+    return redirect(url_for("admin_claims"))
 
 @app.route("/admin/users")
 @admin_required

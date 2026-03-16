@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4>All Claims</h4>
+
+<table class="table table-bordered">
+
+<thead>
+<tr>
+<th>User</th>
+<th>Title</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for c in claims %}
+
+<tr>
+
+<td>{{ c.full_name }}</td>
+<td>{{ c.title }}</td>
+<td>RM {{ c.claim_amount }}</td>
+<td>{{ c.status }}</td>
+
+<td>
+
+<a href="/admin/claims/{{ c.id }}/approve"
+class="btn btn-success btn-sm">
+Approve
+</a>
+
+<a href="/admin/claims/{{ c.id }}/reject"
+class="btn btn-danger btn-sm">
+Reject
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endblock %}

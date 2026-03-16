@@ -377,6 +377,12 @@ body.dark-mode i {
               <i class="bi bi-card-checklist"></i> Leaves
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('claim_dashboard') }}">
+              <i class="bi bi-receipt"></i> Claims
+            </a>
+          </li>
+          
           {% else %}
 
             {% if session.get('position') == "CEO" %}
@@ -392,6 +398,11 @@ body.dark-mode i {
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('user_dashboard') }}">
                 <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('claim_dashboard') }}">
+                <i class="bi bi-receipt"></i> Claims
               </a>
             </li>
             
