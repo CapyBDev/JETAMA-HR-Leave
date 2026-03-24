@@ -1,17 +1,17 @@
-{% block title %}Login | J-Leave App{% endblock %}
+{% block title %}HOME | J-HR&ESG{% endblock %}
 
 {% block content %}
 
 <style>
 
-/* ===== FULL PAGE BACKGROUND ===== */
+/* ===== BACKGROUND ===== */
 .login-page {
     background: url("{{ url_for('static', filename='DJI_0094.JPG') }}") no-repeat center center/cover;
     min-height: 100vh;
     position: relative;
 }
 
-/* DARK OVERLAY (for readability) */
+/* Overlay */
 .login-page::before {
     content: "";
     position: absolute;
@@ -20,137 +20,172 @@
     background: rgba(0,0,0,0.35);
 }
 
-/* ===== CONTENT WRAPPER ===== */
+/* ===== TOP BAR ===== */
+.top-bar {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    padding: 12px 25px;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #b8f2e6, #3a86ff);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
+}
+
+.top-bar img {
+    height: 40px;
+}
+
+.top-login {
+    background: #3a86ff;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+/* ===== CONTENT ===== */
 .login-wrapper {
     position: relative;
     z-index: 2;
 }
 
-/* ===== LEFT TEXT ===== */
-.hero-text {
-    color: white;
-}
-
+/* LEFT TEXT */
 .hero-title {
-    font-size: 48px;
+    font-size: 60px;
     font-weight: 800;
-    letter-spacing: 2px;
+    color: white;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .hero-box {
-    margin-top: 20px;
-    background: rgba(0, 255, 200, 0.3);
-    padding: 20px;
-    border-radius: 20px;
-    backdrop-filter: blur(6px);
+    margin-top: 30px;
+    background: rgba(0,255,200,0.25);
+    padding: 25px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    color: #00ffae;
+    font-weight: 600;
 }
 
 /* ===== LOGIN CARD ===== */
 .glass-card {
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(15px);
+    border-radius: 25px;
+    border: 1px solid rgba(255,255,255,0.3);
 }
 
 /* Logo */
 .logo-lg {
-  width: 120px;
-  margin-bottom: 10px;
+    width: 130px;
 }
 
-/* Title */
+/* Text */
 .login-title {
-  font-weight: 700;
-  color: white;
+    color: white;
+    font-weight: 700;
 }
 
 .login-subtitle {
-  color: #eee;
-  font-size: 14px;
+    color: #eee;
 }
 
-/* Input */
+/* Inputs */
 .form-control {
-  border-radius: 12px;
+    border-radius: 20px;
+    padding: 12px;
 }
 
 /* Button */
 .btn-primary {
-  border-radius: 12px;
-  font-weight: 600;
+    border-radius: 20px;
+    padding: 10px;
+    font-weight: 600;
+    background: #2d6cdf;
+    border: none;
 }
 
-/* ===== FIX BASE.HTML SIDEBAR ISSUE ===== */
+/* REMOVE BASE NAVBAR */
 .sidebar, .navbar {
     display: none !important;
 }
 
 </style>
 
-<div class="login-page d-flex align-items-center">
-  <div class="container login-wrapper">
-    <div class="row align-items-center">
+<div class="login-page">
 
-      <!-- LEFT SIDE -->
-      <div class="col-md-7 text-white">
-        <div class="hero-title">
-          HR MANAGEMENT<br> SYSTEM
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="d-flex align-items-center gap-2">
+            <img src="{{ url_for('static', filename='JETAMA SDN BHD LOGO (TRANSPARENT).png') }}">
+            <b>HR & ESG DEPARTMENT</b>
         </div>
 
-        <div class="hero-box mt-4">
-          <h5>Revolutionizing the way<br> Businesses Manage Human Resources</h5>
-        </div>
-      </div>
-
-      <!-- RIGHT SIDE LOGIN -->
-      <div class="col-md-5">
-        <div class="card shadow-lg glass-card">
-          <div class="card-body p-4">
-
-            <div class="text-center mb-3">
-              <img src="{{ url_for('static', filename='JETAMA SDN BHD LOGO (TRANSPARENT).png') }}"
-                   class="logo-lg">
-
-              <h3 class="login-title mb-0">J-Leave</h3>
-              <small class="login-subtitle">Employee Leave Management</small>
-            </div>
-
-            <!-- ✅ YOUR ORIGINAL FORM (UNCHANGED) -->
-            <form method="post">
-
-              <div class="mb-3">
-                <label class="form-label text-white">Username</label>
-                <input type="text" class="form-control" name="username" placeholder="Enter username" required>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label text-white">Password</label>
-                <input type="password" class="form-control" name="password" placeholder="Enter password" required>
-              </div>
-
-              <button class="btn btn-primary w-100 py-2">Sign In</button>
-
-            </form>
-
-            {% if show_forgot %}
-            <div class="text-center mt-3">
-              <a href="{{ url_for('forgot_password') }}" class="text-decoration-none text-info">
-                🔐 Forgot Username / Password?
-              </a>
-            </div>
-            {% endif %}
-
-          </div>
-
-          <div class="card-footer text-center small text-light">
-            &copy; {{current_year}} J-Leave • All rights ©Amira
-          </div>
-        </div>
-      </div>
-
+        <div class="top-login">LOG IN</div>
     </div>
-  </div>
+
+    <div class="container login-wrapper d-flex align-items-center" style="min-height:100vh;">
+        <div class="row w-100 align-items-center">
+
+            <!-- LEFT -->
+            <div class="col-md-7 text-white">
+                <div class="hero-title">
+                    HR MANAGEMENT <br> SYSTEM
+                </div>
+
+                <div class="hero-box">
+                    Revolutionizing the way <br>
+                    Businesses Manage Human Resources
+                </div>
+            </div>
+
+            <!-- RIGHT LOGIN -->
+            <div class="col-md-5 d-flex justify-content-center">
+                <div class="glass-card p-4 shadow-lg w-100" style="max-width:400px;">
+
+                    <div class="text-center mb-3">
+                        <img src="{{ url_for('static', filename='JETAMA SDN BHD LOGO (TRANSPARENT).png') }}" class="logo-lg">
+                        <h4 class="login-title mt-2">HR-MANAGEMENT</h4>
+                        <small class="login-subtitle">Employee Leave Management</small>
+                    </div>
+
+                    <!-- ✅ YOUR ORIGINAL FORM -->
+                    <form method="post">
+
+                        <div class="mb-3">
+                            <input type="text" class="form-control" name="username" placeholder="Enter username" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="password" class="form-control" name="password" placeholder="Enter password" required>
+                        </div>
+
+                        <button class="btn btn-primary w-100">Sign In</button>
+
+                    </form>
+
+                    {% if show_forgot %}
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('forgot_password') }}" class="text-info">
+                            Forgot Password?
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="text-center mt-3 small text-light">
+                        © {{current_year}} J-HR&ESG • Amira
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 {% endblock %}
