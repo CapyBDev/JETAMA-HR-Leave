@@ -3177,7 +3177,42 @@ def ceo_reject_leave(leave_id):
     flash("Leave rejected by CEO.", "info")
     return redirect(url_for("ceo_dashboard"))
 
+# New dashboard ----
+@app.route("/user/home")
+@login_required
+def user_home():
 
+    user_id = session["user_id"]
+
+    # ===== LEAVE SUMMARY =====
+    conn = get_db()
+    c = conn.cursor()
+
+    c.execute(adapt_query("""
+        SELECT COUNT(*) AS total_leave
+        FROM leave_applications
+        WHERE user_id=%s
+    """), (user_id,))
+    leave_total = c.fetchone()["total_leave"]
+
+    # ===== CLAIM SUMMARY =====
+    c.execute(adapt_query("""
+        SELECT COUNT(*) AS total_claim,
+               COALESCE(SUM(claim_amount),0) AS total_amount
+        FROM claims
+        WHERE user_id=%s
+    """), (user_id,))
+    claim_data = c.fetchone()
+
+    conn.close()
+
+    return render_template(
+        "user_home.html",
+        leave_total=leave_total,
+        claim_total=claim_data["total_claim"],
+        claim_amount=claim_data["total_amount"]
+    )
+    
 # ---------------------- User Views ----------------------
 @app.route("/user/dashboard")
 @login_required

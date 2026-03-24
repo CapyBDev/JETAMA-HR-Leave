@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+  <h3 class="text-white mb-3">Dashboard</h3>
+  <p class="text-white">Overview of your system</p>
+
+  <!-- SUMMARY CARDS -->
+  <div class="row g-3">
+
+    <div class="col-md-4">
+      <div class="card glass-card p-3">
+        <h6>Total Leave</h6>
+        <h2>{{ leave_total }}</h2>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card glass-card p-3">
+        <h6>Total Claims</h6>
+        <h2>{{ claim_total }}</h2>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card glass-card p-3">
+        <h6>Claim Amount</h6>
+        <h2>RM {{ claim_amount }}</h2>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- QUICK ACTION -->
+  <div class="mt-4">
+    <a href="/claims/submit" class="btn btn-primary me-2">
+      Submit Claim
+    </a>
+
+    <a href="/apply-leave" class="btn btn-success">
+      Apply Leave
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}
