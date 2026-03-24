@@ -1,104 +1,3 @@
-{% comment %} {% extends "base.html" %}
-{% block title %}Login | J-Leave App{% endblock %}
-
-{% block content %}
-
-<style>
-/* Premium logo styling */
-.logo-lg {
-  width: 180px;              /* Bigger logo */
-  height: 200px;
-  transform: scale(1.85);
-  margin-bottom: 12px;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
-  transition: transform 0.3s ease;
-}
-
-/* Glass card look */
-.glass-card {
-  background: linear-gradient(145deg,
-  rgba(202, 251, 255, 0.61),
-  rgba(35, 255, 218, 0.4));
-  backdrop-filter: blur(5px);
-  border-radius: 20px;
-  border: 1px solid rgba(117, 197, 255, 0.3);
-}
-
-/* Title styling */
-.login-title {
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #ffffff;
-}
-
-.login-subtitle {
-  color: #f6f9ff;
-  font-size: 14px;
-  font-style: italic;
-}
-
-/* Input style */
-.form-control {
-  border-radius: 12px;
-}
-
-/* Button premium */
-.btn-primary {
-  border-radius: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-</style>
-
-<div class="row justify-content-center">
-  <div class="col-md-6 col-lg-5">
-    <div class="card shadow-lg glass-card">
-      <div class="card-body p-4">
-
-        <div class="text-center mb-3">
-          <img src="{{ url_for('static', filename='JETAMA SDN BHD LOGO (TRANSPARENT).png') }}"
-               class="logo-lg"
-               alt="Logo">
-
-          <h3 class="login-title mb-0">J-Leave</h3>
-          <small class="login-subtitle">Employee Leave Management</small>
-        </div>
-
-        <form method="post">
-
-          <div class="mb-3">
-            <label class="form-label text-white">Username</label>
-            <input type="text" class="form-control" name="username" placeholder="Enter username" required>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label text-white">Password</label>
-            <input type="password" class="form-control" name="password" placeholder="Enter password" required>
-          </div>
-
-          <button class="btn btn-primary w-100 py-2">Sign In</button>
-
-
-        </form>
-
-        {% if show_forgot %}
-        <div class="text-center mt-3">
-          <a href="{{ url_for('forgot_password') }}" class="text-decoration-none text-info">
-            🔐 Forgot Username / Password?
-          </a>
-        </div>
-        {% endif %}
-
-      </div>
-
-      <div class="card-footer text-center small text-light">
-        &copy; <span id="yearCopy"></span> J-Leave • All rights ©Amira {{current_year}} .
-      </div>
-    </div>
-  </div>
-</div>
-
-{% endblock %} {% endcomment %}
 {% extends "base.html" %}
 {% block title %}Login | J-Leave App{% endblock %}
 
@@ -246,7 +145,7 @@ body {
                 </form>
 
                 <div class="text-center mt-3 small">
-                    © J-Leave • All rights reserved
+                    © J-HR&ESG • All rights reserved
                 </div>
 
             </div>
