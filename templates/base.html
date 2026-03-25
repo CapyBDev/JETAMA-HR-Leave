@@ -1,80 +1,558 @@
-<div class="d-flex">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}J-Leave App{% endblock %}</title>
+  
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <meta name="theme-color" content="#23dce6">
 
-  <!-- ================= SIDEBAR ================= -->
-  <div class="sidebar">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <div class="logo mb-4">
-      <strong>JETAMA</strong>
-    </div>
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
 
-    <a href="/home" class="menu-item">
-      <i class="bi bi-grid"></i> Dashboard
-    </a>
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-    <div class="menu-title">Leave</div>
-    <a href="{{ url_for('user_dashboard') }}" class="menu-item">My Leave</a>
-    <a href="{{ url_for('apply_leave') }}" class="menu-item">Apply Leave</a>
+  <!-- 🌗 DARK / LIGHT MODE CSS -->
+  <style>
+    body.light-mode {
+      background: #F4F7FC;
+      color: #212529;
+    }
 
-    <div class="menu-title">Claim</div>
-    <a href="{{ url_for('claim_dashboard') }}" class="menu-item">My Claims</a>
-    <a href="{{ url_for('submit_claim') }}" class="menu-item">Submit Claim</a>
+    body.dark-mode {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
 
-  </div>
+    .dark-mode .bg-image {
+      opacity: 0.15;
+    }
+
+    /* Navbar */
+    .dark-mode .glass-nav {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border-bottom: 1px solid #334155;
+    }
+
+    /* Cards */
+    .dark-mode .card,
+    .dark-mode .glass-card {
+      background: rgba(30, 41, 59, 0.9) !important;
+      color: #e5e7eb;
+      border-color: #334155;
+    }
+
+    /* Tables */
+    .dark-mode table {
+      color: #e5e7eb;
+    }
+
+    .dark-mode .table-light {
+      background: #1e293b !important;
+      color: #e5e7eb;
+    }
+
+    /* Inputs */
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea {
+      background: #020617;
+      color: #e5e7eb;
+      border-color: #334155;
+    }
+
+    /* Buttons */
+    .dark-mode .btn-outline-light {
+      color: #e5e7eb;
+      border-color: #64748b;
+    }
+
+    /* Toast */
+    .dark-mode .toast {
+      background: #1e293b !important;
+    }
+
+    /* Calendar */
+    .dark-mode .fc {
+      background: #020617;
+    }
+
+    /* ============================= */
+  /* 🌗 DASHBOARD DARK MODE FIX */
+  /* ============================= */
+
+  .dark-mode .summary-card,
+  .dark-mode .data-card,
+  .dark-mode .glass-card {
+    background: rgba(30, 41, 59, 0.92) !important;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: #e5e7eb;
+    backdrop-filter: blur(10px);
+  }
+
+  /* Summary numbers */
+  .dark-mode .summary-value {
+    color: #60d9faff;
+  }
+
+  /* Summary titles */
+  .dark-mode .summary-title {
+    color: #cbd5f5;
+  }
+
+  /* Icons */
+  .dark-mode .summary-icon {
+    color: #93fde8ff;
+  }
+
+  /* Tables */
+  .dark-mode table {
+    color: #e5e7eb;
+  }
+
+  .dark-mode .table thead {
+    background: rgba(15, 23, 42, 0.8) !important;
+    color: #cbd5f5;
+  }
+
+  .dark-mode .table tbody tr {
+    border-color: rgba(148, 163, 184, 0.2);
+  }
+
+  .dark-mode .table tbody tr:hover {
+    background: rgba(51, 65, 85, 0.5);
+  }
+
+  /* Status badges */
+  .dark-mode .status-badge.approved {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+  }
+
+  .dark-mode .status-badge.pending {
+    background: rgba(251, 191, 36, 0.25);
+    color: #fde68a;
+  }
+
+  .dark-mode .status-badge.rejected {
+    background: rgba(239, 68, 68, 0.25);
+    color: #fca5a5;
+  }
+
+  /* Dashboard section titles */
+  .dark-mode h4,
+  .dark-mode h5,
+  .dark-mode h6 {
+    color: #e5e7eb;
+  }
+
+  /* Inputs in dashboard */
+  .dark-mode .form-control,
+  .dark-mode .btn-select {
+    background: rgba(2, 6, 23, 0.8);
+    color: #e5e7eb;
+    border-color: rgba(148, 163, 184, 0.3);
+  }
+
+  /* Chart canvas container */
+  .dark-mode canvas {
+    background: transparent !important;
+  }
+
+  /* ================================================= */
+/* 🌙 FORCE DARK MODE DASHBOARD (OVERRIDE BOOTSTRAP) */
+/* ================================================= */
+
+body.dark-mode .data-card,
+body.dark-mode .summary-card,
+body.dark-mode .glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.95),
+    rgba(30, 41, 59, 0.95)
+  ) !important;
+  border: 1px solid rgba(148, 163, 184, 0.25) !important;
+  color: #e5e7eb !important;
+  backdrop-filter: blur(12px);
+}
+
+/* Headings */
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6 {
+  color: #e0f2fe !important; /* light blue */
+}
+
+/* Tables */
+body.dark-mode .table {
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .table thead th {
+  background: rgba(15, 23, 42, 0.9) !important;
+  color: #feffffff !important; /* cyan */
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+body.dark-mode .table tbody tr {
+  background: transparent !important;
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+body.dark-mode .table tbody tr:hover {
+  background: rgba(56, 189, 248, 0.08) !important;
+}
+
+/* Table muted text */
+body.dark-mode .text-muted {
+  color: #feffffff !important;
+}
+
+/* Links & icons */
+body.dark-mode a,
+body.dark-mode a i {
+  color: #9fcfffff !important;
+}
+
+body.dark-mode a:hover {
+  color: #7ddafcff !important;
+}
+
+/* Buttons (PDF / View) */
+body.dark-mode .btn-outline-primary {
+  color: #f83838ff;
+  border-color: #f86e38ff;
+}
+
+body.dark-mode .btn-outline-primary:hover {
+  background: #38bdf8;
+  color: #020617;
+}
+
+/* Status badges */
+body.dark-mode .status-badge.approved {
+  background: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+}
+
+body.dark-mode .status-badge.pending {
+  background: rgba(251, 191, 36, 0.25);
+  color: #fde68a;
+}
+
+body.dark-mode .status-badge.rejected {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+
+/* Icons */
+body.dark-mode i {
+  color: #7dd3fc;
+}
+
+/* 🔴 Notification count badge in front */
+.notification-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 4000 !important;
+}
+/* 🔴 Notification red dot */
+.notification-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  border: 2px solid white;
+  z-index: 30000;
+}
+.dark-mode .notification-dot {
+  border: 2px solid #0f172a;
+}
+
+/* Glass cards lower layer */
+.glass-card {
+  z-index: 2;
+}
+/* ===============================
+   FORCE NAVBAR ABOVE ALL CARDS
+=============================== */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index:99999 !important;
+}
+
+/* 🔔 Notification container */
+.notification-bell {
+  position: relative;
+}
+
+/* Dropdown box style */
+.notification-dropdown {
+  position: absolute !important;   /* relative to bell */
+  top: 120%;                       /* just below bell */
+  right: 0;
+  min-width: 320px;
+  max-width: 380px;
+  border-radius: 14px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+  padding: 8px;
+  z-index: 9999;
+}
+
+/* Dark mode */
+.dark-mode .notification-dropdown {
+  background: rgba(15,23,42,0.97) !important;
+}
+
+/* Light mode */
+.notification-dropdown {
+  background: #ffffff;
+}
 
 
-  <!-- ================= MAIN CONTENT ================= -->
-  <div class="main-content w-100">
+/* Badge always visible */
+.notification-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  z-index: 30000 !important;
+}
 
-    <!-- ================= TOPBAR ================= -->
-    <div class="topbar d-flex justify-content-between align-items-center">
+/* Glass cards stay below */
+.glass-card,
+.data-card,
+.summary-card {
+  position: relative;
+  z-index: 1 !important;
+}
+  </style>
+  
+</head>
 
-      <!-- Search -->
-      <input type="text" class="form-control w-25" placeholder="Search here...">
+<body class="bg-gradient {{ session.get('theme_mode', 'light') }}-mode">
 
-      <!-- RIGHT SIDE -->
-      <div class="d-flex align-items-center gap-3">
+  <div class="bg-image"></div>
 
-        <!-- 🔔 NOTIFICATION -->
-        <div class="dropdown">
-          <i class="bi bi-bell fs-5" data-bs-toggle="dropdown"></i>
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar navbar-expand-lg navbar-dark glass-nav">
+    <div class="container-fluid">
 
-          <div class="dropdown-menu dropdown-menu-end p-3">
-            <p>No new notifications</p>
-          </div>
-        </div>
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <img src="{{ url_for('static', filename='no bg.png') }}" alt="Logo" class="logo">
+        <span id="orgName">JETAMA SDN BHD | e-Leave</span>
+      </a>
 
-        <!-- 🌙 DARK MODE -->
-        <button onclick="toggleTheme()" class="btn btn-light btn-sm">
-          🌙
-        </button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-        <!-- 👤 PROFILE -->
-        <div class="dropdown">
-          <div data-bs-toggle="dropdown" style="cursor:pointer;">
-            <i class="bi bi-person-circle fs-4"></i>
-          </div>
 
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li class="dropdown-item">
-              {{ session.get('full_name') }}
-            </li>
-            <li><hr class="dropdown-divider"></li>
-            <li>
-              <a href="{{ url_for('logout') }}" class="dropdown-item text-danger">
-                Logout
+        {% if session.get('user_id') %}
+
+        <!-- LEFT MENU -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% if session.get('role') == 'admin' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+              <i class="bi bi-speedometer"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('manage_users') }}">
+              <i class="bi bi-people"></i> Employees
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('manage_leaves') }}">
+              <i class="bi bi-card-checklist"></i> Leaves
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('claim_dashboard') }}">
+              <i class="bi bi-receipt"></i> Claims
+            </a>
+          </li>
+          
+          {% else %}
+
+            {% if session.get('position') == "CEO" %}
+            <!-- CEO MENU -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('ceo_dashboard') }}">
+                <i class="bi bi-speedometer2"></i> Dashboard
               </a>
             </li>
-          </ul>
+
+            {% else %}
+            <!-- NORMAL USER MENU -->
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('user_dashboard') }}">
+                <i class="bi bi-speedometer2"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('claim_dashboard') }}">
+                <i class="bi bi-receipt"></i> Claims
+              </a>
+            </li>
+            
+            {% endif %}
+
+          {% endif %}
+
+        </ul>
+
+        <!-- RIGHT AREA -->
+        <div class="d-flex align-items-center gap-2 ms-auto">
+
+          <!-- 🔔 NOTIFICATION -->
+          <div class="dropdown notification-bell">
+            <button class="btn p-0 text-white"
+                    type="button"
+                    id="notifBtn"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              <i class="bi bi-bell fs-5"></i>
+            </button>
+
+            {# 🔴 Red dot logic #}
+            {% if (pending_actions and pending_actions|length > 0) or not session.get("notif_seen") %}
+              <span class="notification-dot"></span>
+            {% endif %}
+
+            <div class="dropdown-menu dropdown-menu-end notification-dropdown glass-card p-2">
+
+              <h6 class="dropdown-header">Notifications</h6>
+
+              {% set has_notif = false %}
+
+              <!-- ✅ Pending actions -->
+              {% if pending_actions and pending_actions|length > 0 %}
+                {% set has_notif = true %}
+                {% for act in pending_actions %}
+                  <div class="dropdown-item small">
+                    <i class="bi bi-exclamation-circle text-warning"></i>
+                    <strong>{{ act.full_name }}</strong> — {{ act.leave_type }}
+                    <span class="badge bg-warning ms-1">Action Required</span>
+                    <div class="text-muted small">
+                      {{ act.created_at }}
+                    </div>
+                  </div>
+                {% endfor %}
+                <hr class="dropdown-divider">
+              {% endif %}
+
+              <!-- ✅ Flash messages -->
+              {% with flash_notes = get_flashed_messages(with_categories=true) %}
+                {% for category, msg in flash_notes %}
+                  {% set has_notif = true %}
+                  <div class="dropdown-item small text-{{ category }}">
+                    <i class="bi bi-info-circle"></i> {{ msg }}
+                    <div class="text-muted small">
+                      {{ current_time }}
+                    </div>
+                  </div>
+                {% endfor %}
+              {% endwith %}
+
+              <!-- ✅ Last leave status -->
+              {% if my_leaves and my_leaves[0].status in ['Approved', 'Rejected'] %}
+                {% set has_notif = true %}
+                <div class="dropdown-item small 
+                  {% if my_leaves[0].status == 'Approved' %}text-success{% else %}text-danger{% endif %}">
+                  <i class="bi bi-bell-fill"></i>
+                  Last request: <strong>{{ my_leaves[0].status }}</strong>
+                  <div class="text-muted small">
+                    {{ my_leaves[0].approved_at or my_leaves[0].updated_at }}
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if not has_notif %}
+                <div class="dropdown-item small text-muted">
+                  No new notifications
+                </div>
+              {% endif %}
+
+            </div>
+          </div>
+
         </div>
 
+          <!-- 🌗 THEME TOGGLE -->
+          <a href="{{ url_for('toggle_theme') }}"
+            class="btn btn-sm border-0 bg-transparent text-light px-1"
+            title="Toggle theme">
+            {% if session.get('theme_mode') == 'dark' %}
+              🌞
+            {% else %}
+              🌙
+            {% endif %}
+          </a>
+
+          <!-- USER INFO -->
+          <span class="text-light small ms-1 me-1">
+            {{ session.get('full_name') }}
+          </span>
+
+        <!-- 👤 Profile photo (click → profile) -->
+          <a href="{{ url_for('profile') }}" class="d-flex align-items-center text-decoration-none ms-1">
+            {% if session.get('profile_photo') %}
+              <img src="{{ url_for('static', filename='uploads/profile_photos/' ~ session.get('profile_photo')) }}"
+                  class="rounded-circle border"
+                  style="width:34px;height:34px;object-fit:cover;">
+            {% else %}
+              <i class="bi bi-person-circle fs-4 text-white"></i>
+            {% endif %}
+          </a>
+
+          <!-- BUTTONS -->
+
+          <a class="btn btn-sm btn-danger ms-2" href="{{ url_for('logout') }}">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </a>
+
+        </div>
+        {% endif %}
       </div>
     </div>
+  </nav>
 
-    <!-- PAGE CONTENT -->
-    <div class="p-4">
-      {% block content %}{% endblock %}
-    </div>
+  <!-- ================= CONTENT ================= -->
+  <main class="container py-4">
+    {% block content %}{% endblock %}
+  </main>
 
-  </div>
+  <!-- ================= SCRIPTS ================= -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 
-</div>
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+  document.getElementById("notifBtn")?.addEventListener("click", function () {
+    fetch("/mark_notifications_seen", { method: "POST" });
+  });
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/service-worker.js');
+}
+</script>
+
+</body>
+</html>
