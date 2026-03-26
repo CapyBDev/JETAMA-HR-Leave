@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 # ---------- CONFIG ----------
 SQLITE_DB = "database.db"
-POSTGRES_URL = "postgresql://jleave_db_k1we_user:tyXXfE4OfKGBEHLE6OYLahFupl48cpkP@dpg-d6drgr14tr6s73d1m55g-a.singapore-postgres.render.com/jleave_db_k1we"
+POSTGRES_URL = "postgresql://claim_db_iw7g_user:VqDnpd2yPdNqtEKGla3esCEUMlEa3Kq7@dpg-d71nmima2pns73fas9b0-a.singapore-postgres.render.com/claim_db_iw7g"
 # ----------------------------
 
 # Connect SQLite
