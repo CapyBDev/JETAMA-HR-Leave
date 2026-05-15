@@ -1593,7 +1593,7 @@ def manage_users():
                     SELECT 1 FROM leave_applications la
                     WHERE la.user_id = u.id
                     AND la.status = 'Approved'
-                    AND DATE(%s) BETWEEN la.start_date AND la.end_date
+                    AND DATE(%s) BETWEEN DATE(la.start_date) AND DATE(la.end_date)
                 ) THEN 'On Leave'
                 ELSE COALESCE(u.availability, 'Available')
             END AS availability,
@@ -1624,7 +1624,7 @@ def manage_users():
                         SELECT 1 FROM leave_applications la
                         WHERE la.user_id = u.id
                         AND la.status = 'Approved'
-                        AND DATE(%s) BETWEEN la.start_date AND la.end_date
+                        AND DATE(%s) BETWEEN DATE(la.start_date) AND DATE(la.end_date)
                     ) THEN 'On Leave'
                     ELSE COALESCE(u.availability, 'Available')
                 END
